@@ -1,20 +1,44 @@
 const url = "https://api.adviceslip.com/advice";
-const id = document.querySelector(".track");
-const text = document.querySelector(".text");
+const container = document.querySelector(".holder");
 const btn = document.querySelector(".btn");
 
-const getQuote = () => {
-  fetch(url)
-    .then((data) => {
-      return data.json();
-    })
-    .then((data) => {
-      id.innerHTML = `Advice #${data.slip.id}`;
-      text.innerHTML = `"${data.slip.advice}"`;
-    })
-    .catch((err) => console.log(err));
-};
+let state = {};
 
 btn.addEventListener("click", () => {
-  getQuote();
+  requestMethod(url);
 });
+
+const requestMethod = (url) => {
+  const httpRequest = new XMLHttpRequest();
+
+  httpRequest.addEventListener("readystatechange", () => {
+    if (httpRequest.readyState === 4) {
+      if (httpRequest.status === 200) {
+        successUI(httpRequest.responseText);
+      } else {
+        errorUI();
+      }
+    }
+  });
+  httpRequest.open("GET", url);
+  httpRequest.send();
+};
+
+const successUI = (data) => {
+  const parsed = JSON.parse(data);
+  state = {
+    id: parsed.slip.id,
+    advice: parsed.slip.advice,
+  };
+
+  container.innerHTML = `
+    <div class="track">Advice #${state.id}</div>
+    <div class="text">"${state.advice}"</div>
+  `;
+};
+
+const errorUI = () => {
+  container.innerHTML = `
+        <div class="text">Unable to load advice <br /> Try again</div>
+  `;
+};
