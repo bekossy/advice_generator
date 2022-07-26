@@ -1,32 +1,20 @@
-const url = "	https://api.adviceslip.com/advice";
-
-// const requestMethod = (url) => {
-//     const httpRequest = new XMLHttpRequest();
-
-//     httpRequest.addEventListener('readystatechange', () => {
-//         if(httpRequest.readyState === 4){
-//             if(httpRequest.status === 200){
-//                 console.log(JSON.parse(httpRequest.responseText))
-//                 // console.log(httpRequest.responseText)
-//             }
-//             else{
-//                 console.log(httpRequest.status)
-//             }
-//         }
-//     });
-//     httpRequest.open('GET', url);
-//     httpRequest.send();
-// }
-
-// requestMethod(url)
-
-fetch(url)
-  .then((data) => data.json())
-  .then((data) => console.log(data))
-  .catch((err) => console.log(err));
-
+const url = "https://api.adviceslip.com/advice";
+const id = document.querySelector(".track");
+const text = document.querySelector(".text");
 const btn = document.querySelector(".btn");
 
-btn.addEventListener("click", (e) => {
-  console.log("hello");
+const getQuote = () => {
+  fetch(url)
+    .then((data) => {
+      return data.json();
+    })
+    .then((data) => {
+      id.innerHTML = `Advice #${data.slip.id}`;
+      text.innerHTML = `"${data.slip.advice}"`;
+    })
+    .catch((err) => console.log(err));
+};
+
+btn.addEventListener("click", () => {
+  getQuote();
 });
