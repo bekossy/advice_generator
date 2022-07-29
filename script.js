@@ -13,7 +13,7 @@ const requestMethod = (url) => {
 
   httpRequest.addEventListener("readystatechange", () => {
     if (httpRequest.readyState === 4) {
-      if (httpRequest.status === 200) {
+      if (httpRequest.status >= 200 && httpRequest.status <= 299) {
         successUI(httpRequest.responseText);
       } else {
         errorUI();
